@@ -83,7 +83,7 @@ under /usr/local/lib/python3.9/dist-packages/adafruit_platformdetect
 edit board.py and add the following elif statement. (I put it under the BBAI elif entry)
 
 there is a a try: statement near the bottom for the ai-64, this is trying to read 2-00500/nvmem this isn't right. 
-#        try:
+        try:
         #            # Special Case for AI64
         #            with open("/sys/bus/nvmem/devices/2-00500/nvmem", "rb") as eeprom:
         #                eeprom_bytes = eeprom.read(16)
@@ -91,7 +91,7 @@ there is a a try: statement near the bottom for the ai-64, this is trying to rea
         #            return None
 
 instead use the get_device_model() method to obtain the board. 
-# beagle,j721e-beagleboneai64^@ti,j721e^@
+beagle,j721e-beagleboneai64^@ti,j721e^@
 
 I added following abothe the memory read try: statements.
 
@@ -155,11 +155,12 @@ i2cdetect -r 5
 
 **PRU**
 
-THe AI64 has more that just the 2 PRU's of the BBB.  IT was a painful experience to get PRU0 working.
+THe AI64 has more that just the 2 PRU's of the BBB.  It was a painful experience to get PRU0 working.
 
 Again the pins used need to be configured in the Device tree overlay. Do not select pins that are used for "boot select"
-Comunication between the ARM and PRU is done by passing words back and forth via the SRAM of the PRU this maps to 0x0b000000 on the arm side. this was dificult to find.
-the pru firmware executable is writen in C and compiled for the AI64 System on a chip (TDA4VM) this was done using TI's code composer studio.  you may have to change teh default memeory rqanges to get your program to compile.  In this repository is my CCS files and settings.
+Communication between the ARM and PRU is done by passing words back and forth via the SRAM of the PRU. This maps to 0x0b000000 on the arm side. remote proc is too slow.
+
+The pru firmware executable is writen in C and compiled for the AI64 System on a chip (TDA4VM) this was done using TI's code composer studio.  You may have to change the default memory ranges to get your program to compile.  In this repository are my CCS files and settings.
 once compiled place your .out file in your home directory on the BBAI64 /home/debian/
 
 echo 'stop' > /sys/class/remoteproc/remoteproc0/state

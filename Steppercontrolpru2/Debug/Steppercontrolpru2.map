@@ -1,0 +1,320 @@
+******************************************************************************
+                     PRU Linker PC v2.3.3                      
+******************************************************************************
+>> Linked Fri Jun 28 15:35:04 2024
+
+OUTPUT FILE NAME:   <Steppercontrolpru2.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 00000738
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+PAGE 0:
+  PRU_IMEM              00000000   00001000  00000770  00000890  RWIX
+
+PAGE 1:
+  PRU0_DMEM_0           00000000   00001000  00000814  000007ec  RWIX
+  RTU0_DMEM_0           00001000   00000800  00000000  00000800  RWIX
+  TX_PRU0_DMEM_0        00001800   00000800  00000000  00000800  RWIX
+  PRU0_DMEM_1           00002000   00000500  00000000  00000500  RWIX
+  RTU0_DMEM_1           00003000   00000800  00000000  00000800  RWIX
+  TX_PRU0_DMEM_1        00003800   00000800  00000000  00000800  RWIX
+
+PAGE 2:
+  PRU_RTU_RAT0          00008000   00000854  00000000  00000854  RWIX
+  PRU_SHAREDMEM         00010000   00010000  00000008  0000fff8  RWIX
+  PRU_INTC              00020000   00001504  00000000  00001504  RWIX
+  PRU0_CTRL             00022000   00000088  00000030  00000058  RWIX
+  RSVD14                00024800   00000100  00000000  00000100  RWIX
+  PRU_CFG               00026000   00000100  00000000  00000100  RWIX
+  PRU_CFG_0x100         00026100   00000098  00000000  00000098  RWIX
+  PA_STATS_QRAM         00027000   00000100  00000000  00000100  RWIX
+  PRU_UART              00028000   00000038  00000000  00000038  RWIX
+  TM_CFG_PRU0           0002a000   0000004c  00000000  0000004c  RWIX
+  PA_STATS_CRAM         0002c000   00000100  00000000  00000100  RWIX
+  PRU_IEP0              0002e000   00000400  0000031c  000000e4  RWIX
+  PRU_IEP0_0x100        0002e400   0000021c  00000000  0000021c  RWIX
+  PRU_IEP1              0002f000   00000100  00000000  00000100  RWIX
+  PRU_IEP1_0x100        0002f100   0000021c  00000000  0000021c  RWIX
+  PRU_ECAP              00030000   00000060  00000000  00000060  RWIX
+  MII_RT                00032000   0000024c  00000000  0000024c  RWIX
+  MII_MDIO              00032400   00000090  00000000  00000090  RWIX
+  MII_G_RT              00033000   00000c18  00000000  00000c18  RWIX
+  RSVD15                60000000   00001000  00000000  00001000  RWIX
+  RSVD16                70000000   00001000  00000000  00001000  RWIX
+  RSVD17                80000000   00001000  00000000  00001000  RWIX
+  RSVD18                90000000   00001000  00000000  00001000  RWIX
+  RSVD19                a0000000   00001000  00000000  00001000  RWIX
+  RSVD20                b0000000   00001000  00000000  00001000  RWIX
+  RSVD23                c0000000   00001000  00000000  00001000  RWIX
+  RSVD29                d0000000   00010000  00000000  00010000  RWIX
+  RSVD30                e0000000   00010000  00000000  00010000  RWIX
+  RSVD31                f0000000   00010000  00000000  00010000  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.text      0    00000000    00000770     
+                  00000000    00000698     PRU_1.obj (.text:main)
+                  00000698    00000054     PRU_1.obj (.text:reset_pru)
+                  000006ec    00000028     PRU_1.obj (.text:reset_iep)
+                  00000714    00000024     rtspruv3_le.lib : mpyi.c.obj (.text:__pruabi_mpyi)
+                  00000738    0000001c                     : boot.c.obj (.text:_c_int00_noinit_noargs)
+                  00000754    0000000c     PRU_1.obj (.text:read_iep)
+                  00000760    00000008     rtspruv3_le.lib : exit.c.obj (.text:abort)
+                  00000768    00000008                     : exit.c.obj (.text:loader_exit)
+
+.stack     1    00000000    00000800     UNINITIALIZED
+                  00000000    00000004     rtspruv3_le.lib : boot.c.obj (.stack)
+                  00000004    000007fc     --HOLE--
+
+.cinit     1    00000000    00000000     UNINITIALIZED
+
+.resource_table 
+*          1    00000800    00000014     
+                  00000800    00000014     PRU_1.obj (.resource_table:retain)
+
+.creg.PRU_SHAREDMEM.noload.near 
+*          2    00010000    00000000     NOLOAD SECTION
+
+.creg.PRU_SHAREDMEM.near 
+*          2    00010000    00000008     
+                  00010000    00000008     PRU_1.obj (.creg.PRU_SHAREDMEM.near)
+
+.creg.PRU_SHAREDMEM.noload.far 
+*          2    00010008    00000000     NOLOAD SECTION
+
+.creg.PRU_SHAREDMEM.far 
+*          2    00010008    00000000     UNINITIALIZED
+
+.creg.PRU0_CTRL.noload.near 
+*          2    00022000    00000030     NOLOAD SECTION
+                  00022000    00000030     PRU_1.obj (.creg.PRU0_CTRL.noload.near)
+
+.creg.PRU0_CTRL.near 
+*          2    00022030    00000000     UNINITIALIZED
+
+.creg.PRU0_CTRL.noload.far 
+*          2    00022030    00000000     NOLOAD SECTION
+
+.creg.PRU0_CTRL.far 
+*          2    00022030    00000000     UNINITIALIZED
+
+.creg.PRU_IEP0.noload.near 
+*          2    0002e000    0000031c     NOLOAD SECTION
+                  0002e000    0000031c     PRU_1.obj (.creg.PRU_IEP0.noload.near)
+
+.creg.PRU_IEP0.near 
+*          2    0002e31c    00000000     UNINITIALIZED
+
+.creg.PRU_IEP0.noload.far 
+*          2    0002e31c    00000000     NOLOAD SECTION
+
+.creg.PRU_IEP0.far 
+*          2    0002e31c    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module         code   ro data   rw data
+       ------         ----   -------   -------
+    .\
+       PRU_1.obj      1824   0         872    
+    +--+--------------+------+---------+---------+
+       Total:         1824   0         872    
+                                              
+    C:\Users\office-win\Desktop\CCS\ccs\tools\compiler\ti-cgt-pru_2.3.3\lib\rtspruv3_le.lib
+       mpyi.c.obj     36     0         0      
+       boot.c.obj     28     0         0      
+       exit.c.obj     16     0         0      
+    +--+--------------+------+---------+---------+
+       Total:         80     0         0      
+                                              
+       Stack:         0      0         2048   
+    +--+--------------+------+---------+---------+
+       Grand Total:   1904   0         2920   
+
+
+SEGMENT ATTRIBUTES
+
+    id tag      seg value
+    -- ---      --- -----
+     0 PHA_PAGE 1   1    
+     1 PHA_PAGE 2   1    
+     2 PHA_PAGE 3   2    
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+page  address   name                          
+----  -------   ----                          
+0     00000768  C$$EXIT                       
+2     0002e000  CT_IEP0                       
+2     00022000  CT_PRU0_CTRL                  
+abs   00033000  __PRU_CREG_BASE_MII_G_RT      
+abs   00032400  __PRU_CREG_BASE_MII_MDIO      
+abs   00032000  __PRU_CREG_BASE_MII_RT        
+abs   0002c000  __PRU_CREG_BASE_PA_STATS_CRAM 
+abs   00027000  __PRU_CREG_BASE_PA_STATS_QRAM 
+abs   00022000  __PRU_CREG_BASE_PRU0_CTRL     
+abs   00000000  __PRU_CREG_BASE_PRU0_DMEM_0   
+abs   00002000  __PRU_CREG_BASE_PRU0_DMEM_1   
+abs   00026000  __PRU_CREG_BASE_PRU_CFG       
+abs   00026100  __PRU_CREG_BASE_PRU_CFG_0x100 
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP      
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP0      
+abs   0002e400  __PRU_CREG_BASE_PRU_IEP0_0x100
+abs   0002f000  __PRU_CREG_BASE_PRU_IEP1      
+abs   0002f100  __PRU_CREG_BASE_PRU_IEP1_0x100
+abs   00020000  __PRU_CREG_BASE_PRU_INTC      
+abs   00008000  __PRU_CREG_BASE_PRU_RTU_RAT0  
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM 
+abs   00028000  __PRU_CREG_BASE_PRU_UART      
+abs   00024800  __PRU_CREG_BASE_RSVD14        
+abs   60000000  __PRU_CREG_BASE_RSVD15        
+abs   70000000  __PRU_CREG_BASE_RSVD16        
+abs   80000000  __PRU_CREG_BASE_RSVD17        
+abs   90000000  __PRU_CREG_BASE_RSVD18        
+abs   a0000000  __PRU_CREG_BASE_RSVD19        
+abs   b0000000  __PRU_CREG_BASE_RSVD20        
+abs   c0000000  __PRU_CREG_BASE_RSVD23        
+abs   d0000000  __PRU_CREG_BASE_RSVD29        
+abs   e0000000  __PRU_CREG_BASE_RSVD30        
+abs   f0000000  __PRU_CREG_BASE_RSVD31        
+abs   0002a000  __PRU_CREG_BASE_TM_CFG_PRU0   
+abs   00000009  __PRU_CREG_MII_G_RT           
+abs   00000015  __PRU_CREG_MII_MDIO           
+abs   0000001b  __PRU_CREG_MII_RT             
+abs   0000000d  __PRU_CREG_PA_STATS_CRAM      
+abs   0000000c  __PRU_CREG_PA_STATS_QRAM      
+abs   0000000b  __PRU_CREG_PRU0_CTRL          
+abs   00000018  __PRU_CREG_PRU0_DMEM_0        
+abs   00000019  __PRU_CREG_PRU0_DMEM_1        
+abs   00000004  __PRU_CREG_PRU_CFG            
+abs   00000005  __PRU_CREG_PRU_CFG_0x100      
+abs   00000003  __PRU_CREG_PRU_ECAP           
+abs   0000001a  __PRU_CREG_PRU_IEP0           
+abs   00000008  __PRU_CREG_PRU_IEP0_0x100     
+abs   00000001  __PRU_CREG_PRU_IEP1           
+abs   00000002  __PRU_CREG_PRU_IEP1_0x100     
+abs   00000000  __PRU_CREG_PRU_INTC           
+abs   00000016  __PRU_CREG_PRU_RTU_RAT0       
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM      
+abs   00000007  __PRU_CREG_PRU_UART           
+abs   0000000e  __PRU_CREG_RSVD14             
+abs   0000000f  __PRU_CREG_RSVD15             
+abs   00000010  __PRU_CREG_RSVD16             
+abs   00000011  __PRU_CREG_RSVD17             
+abs   00000012  __PRU_CREG_RSVD18             
+abs   00000013  __PRU_CREG_RSVD19             
+abs   00000014  __PRU_CREG_RSVD20             
+abs   00000017  __PRU_CREG_RSVD23             
+abs   0000001d  __PRU_CREG_RSVD29             
+abs   0000001e  __PRU_CREG_RSVD30             
+abs   0000001f  __PRU_CREG_RSVD31             
+abs   0000000a  __PRU_CREG_TM_CFG_PRU0        
+1     00000800  __TI_STACK_END                
+abs   00000800  __TI_STACK_SIZE               
+abs   ffffffff  __c_args__                    
+0     00000714  __pruabi_mpyi                 
+0     00000738  _c_int00_noinit_noargs        
+1     00000000  _stack                        
+0     00000760  abort                         
+0     00000000  main                          
+2     00010000  pru0_command_bits             
+2     00010004  pru_0_axis_databuffer         
+1     00000800  pru_remoteproc_ResourceTable  
+0     00000754  read_iep                      
+0     000006ec  reset_iep                     
+0     00000698  reset_pru                     
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+page  address   name                          
+----  -------   ----                          
+0     00000000  main                          
+0     00000698  reset_pru                     
+0     000006ec  reset_iep                     
+0     00000714  __pruabi_mpyi                 
+0     00000738  _c_int00_noinit_noargs        
+0     00000754  read_iep                      
+0     00000760  abort                         
+0     00000768  C$$EXIT                       
+1     00000000  _stack                        
+1     00000800  __TI_STACK_END                
+1     00000800  pru_remoteproc_ResourceTable  
+2     00010000  pru0_command_bits             
+2     00010004  pru_0_axis_databuffer         
+2     00022000  CT_PRU0_CTRL                  
+2     0002e000  CT_IEP0                       
+abs   00000000  __PRU_CREG_BASE_PRU0_DMEM_0   
+abs   00000000  __PRU_CREG_PRU_INTC           
+abs   00000001  __PRU_CREG_PRU_IEP1           
+abs   00000002  __PRU_CREG_PRU_IEP1_0x100     
+abs   00000003  __PRU_CREG_PRU_ECAP           
+abs   00000004  __PRU_CREG_PRU_CFG            
+abs   00000005  __PRU_CREG_PRU_CFG_0x100      
+abs   00000007  __PRU_CREG_PRU_UART           
+abs   00000008  __PRU_CREG_PRU_IEP0_0x100     
+abs   00000009  __PRU_CREG_MII_G_RT           
+abs   0000000a  __PRU_CREG_TM_CFG_PRU0        
+abs   0000000b  __PRU_CREG_PRU0_CTRL          
+abs   0000000c  __PRU_CREG_PA_STATS_QRAM      
+abs   0000000d  __PRU_CREG_PA_STATS_CRAM      
+abs   0000000e  __PRU_CREG_RSVD14             
+abs   0000000f  __PRU_CREG_RSVD15             
+abs   00000010  __PRU_CREG_RSVD16             
+abs   00000011  __PRU_CREG_RSVD17             
+abs   00000012  __PRU_CREG_RSVD18             
+abs   00000013  __PRU_CREG_RSVD19             
+abs   00000014  __PRU_CREG_RSVD20             
+abs   00000015  __PRU_CREG_MII_MDIO           
+abs   00000016  __PRU_CREG_PRU_RTU_RAT0       
+abs   00000017  __PRU_CREG_RSVD23             
+abs   00000018  __PRU_CREG_PRU0_DMEM_0        
+abs   00000019  __PRU_CREG_PRU0_DMEM_1        
+abs   0000001a  __PRU_CREG_PRU_IEP0           
+abs   0000001b  __PRU_CREG_MII_RT             
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM      
+abs   0000001d  __PRU_CREG_RSVD29             
+abs   0000001e  __PRU_CREG_RSVD30             
+abs   0000001f  __PRU_CREG_RSVD31             
+abs   00000800  __TI_STACK_SIZE               
+abs   00002000  __PRU_CREG_BASE_PRU0_DMEM_1   
+abs   00008000  __PRU_CREG_BASE_PRU_RTU_RAT0  
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM 
+abs   00020000  __PRU_CREG_BASE_PRU_INTC      
+abs   00022000  __PRU_CREG_BASE_PRU0_CTRL     
+abs   00024800  __PRU_CREG_BASE_RSVD14        
+abs   00026000  __PRU_CREG_BASE_PRU_CFG       
+abs   00026100  __PRU_CREG_BASE_PRU_CFG_0x100 
+abs   00027000  __PRU_CREG_BASE_PA_STATS_QRAM 
+abs   00028000  __PRU_CREG_BASE_PRU_UART      
+abs   0002a000  __PRU_CREG_BASE_TM_CFG_PRU0   
+abs   0002c000  __PRU_CREG_BASE_PA_STATS_CRAM 
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP0      
+abs   0002e400  __PRU_CREG_BASE_PRU_IEP0_0x100
+abs   0002f000  __PRU_CREG_BASE_PRU_IEP1      
+abs   0002f100  __PRU_CREG_BASE_PRU_IEP1_0x100
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP      
+abs   00032000  __PRU_CREG_BASE_MII_RT        
+abs   00032400  __PRU_CREG_BASE_MII_MDIO      
+abs   00033000  __PRU_CREG_BASE_MII_G_RT      
+abs   60000000  __PRU_CREG_BASE_RSVD15        
+abs   70000000  __PRU_CREG_BASE_RSVD16        
+abs   80000000  __PRU_CREG_BASE_RSVD17        
+abs   90000000  __PRU_CREG_BASE_RSVD18        
+abs   a0000000  __PRU_CREG_BASE_RSVD19        
+abs   b0000000  __PRU_CREG_BASE_RSVD20        
+abs   c0000000  __PRU_CREG_BASE_RSVD23        
+abs   d0000000  __PRU_CREG_BASE_RSVD29        
+abs   e0000000  __PRU_CREG_BASE_RSVD30        
+abs   f0000000  __PRU_CREG_BASE_RSVD31        
+abs   ffffffff  __c_args__                    
+
+[79 symbols]

@@ -1,0 +1,398 @@
+
+
+flashing image:
+http://elinux.org/Beagleboard:BeagleBoneBlack_Debian#Flashing_eMMC.
+
+
+this time.....
+
+
+sudo apt update ; sudo apt upgrade
+sudo beagle-flasher
+
+usb connection:
+http://192.168.7.2/
+
+
+wifi:  board does not have wifi built in. use usb wifi dongle
+
+https://linuxcommando.blogspot.com/2013/10/how-to-connect-to-wpawpa2-wifi-network.html
+https://www.linuxbabe.com/debian/connect-to-wi-fi-from-terminal-on-debian-wpa-supplicant
+
+/sbin/iw dev
+ip link show wlan0
+sudo ip link set wlan0 up
+ip link show wlan0
+/sbin/iw wlan0 link
+iwconfig 
+
+wpa_passphrase 444 >> /etc/wpa_supplicant.conf
+cat /etc/wpa_supplicant.conf 
+sudo wpa_supplicant -B -Dnl80211 -i wlan0 -c/etc/wpa_supplicant.conf
+/sbin/iw wlan0 link
+
+enable wifi at boot
+/sbin/iw wlan0 link
+root
+
+
+edit interfaces
+sudo nano  /etc/network/interfaces
+
+add
+auto wlan0
+iface wlan0 inet dhcp
+wireless-essid 444
+pre-up wpa_supplicant -B -Dnl80211 -i wlan0 -c/etc/wpa_supplicant.conf
+#post-up route add default gw 192.168.88.1 wlan0
+post-down killall -q wpa_supplicant
+
+
+apt update
+apt upgrade
+sudo apt install --only-upgrade bb-customizations
+sudo apt install --only-upgrade bb-u-boot-beagleboneai64 bb-customizations
+sudo systemctl enable bb-symlinks.service
+sudo /opt/u-boot/bb-u-boot-beagleboneai64/install-microsd.sh
+sudo /opt/u-boot/bb-u-boot-beagleboneai64/install-emmc.sh
+cd /opt/source/dtb-5.10-ti
+git pull
+make all_arm64
+make install all_arm64
+cd /boot/firmware/extlinux
+nano extlinux.conf and added → ftdoverlays /overlays/xxx.dtbo
+reboot
+
+sudo beagle-version
+sudo beagle-version | grep
+
+
+
+
+
+pip3 updates
+
+pip3 install --upgrade pip
+pip3 install --upgrade setuptools
+
+
+
+switch to root
+
+sudo -i
+
+Configuring pins
+https://forum.beagleboard.org/t/bb-ai64-gpio-basics/36032/8
+
+To document the steps for non-software experts who like myself might have a hard time figuring out where the files that need edited are hiding and how to apply the changes (and if applicable to gather feedback on how to do it better), here is what I ended up doing to get it working on a clean install, based on the great feedback from all who responded to this thread:
+
+    Flash recent image: bbai64-emmc-flasher-debian-11.8-xfce-arm64-2024-01-11-10gb.img.xz found at https://rcn-ee.com/rootfs/debian-arm64-11-bullseye-xfce-v5.10-ti/2024-01-11 1/
+
+    Set up network (I use a wifi card so I set up my wifi ssid/password in /etc/wpa_supplicant/wpa_supplicant-wlan0.conf) so you can transfer files to the BBAI64.
+
+    
+    In directory /opt/source/dtb-5.10-ti/ 
+   
+/opt/source/dtb-5.10-ti/src/arm64/overlays
+run:
+
+    sudo make clean
+    sudo make
+    sudo make install_arm64
+
+    reboot
+
+
+for uart and i2c add thes lines to your custom overlay dts file.
+
+&bone_uart_1 {
+	/* tested with sudo agetty 115200 ttyS4 */
+	status = "okay";
+};
+
+&bone_i2c_2 {
+	status = "okay";
+};
+
+
+
+I guess the existing /opt/source/dtb-5.10-ti/src/arm64/k3-j721e-beagleboneai64-bone-buses.dtsi could be edited to add the missing section but it’s a large file so it was easier to simply replace it.
+
+Thanks again to all who helped!
+
+Adafruit gpio doesnt work with AI64 yet.
+
+gpiod library.
+
+https://pypi.org/project/gpiod/
+https://forum.beagleboard.org/t/bb-ai64-gpio-basics/36032
+https://github.com/brgl/libgpiod/blob/master/bindings/python/examples/watch_multiple_line_values.py
+
+gpiodetect
+gpioinfo
+gpiofind P8_28
+gpioset 1 72=0
+
+
+
+edit k3-j721e-beagleboneai64-bone-buses.dtsi (44.6 KB) to get uart working on p9.24 and p9.26 uart 1 ttyS4
+edit k3-j721e-beagleboneai64-bone-buses.dtsi (44.6 KB) to get I2C2 working on p9.19 and p9.20 i2c2 i2c-5
+change disabled to okay
+In directory /opt/source/dtb-5.10-ti/ run:
+
+    sudo make clean
+    sudo make
+    sudo make install_arm64
+
+    reboot
+
+
+
+
+uart and i2c
+to check if ports are open
+tree /dev/bone
+screen /dev/ttyS4 9600 
+screen crtl+a . letter command  D D quit
+https://aperiodic.net/screen/quick_reference
+
+or minitab -D /dev/ttyS4 (turn off hw / sw bit control)
+
+ BLINKA
+
+
+pip3 install Adafruit-Blinka
+pip3 install adafruit-circuitpython-lsm303agr-mag
+pip3 install adafruit-circuitpython-lsm303-accel
+pip3 install adafruit-circuitpython-lis2mdl
+pip3 install adafruit-circuitpython-mma8451
+
+
+Getting addafruit Blinka to work. (blinka 8.43.0)
+currently AI64 is broken in the distribution.
+it tries to read the nvmem to get the id, but that doesnt quite work and the pin map is not for ai 64. 
+
+need to fix it manually.
+
+
+
+I suggest setting the chmod -R 777 to the dist-packages directory and sub directories
+this will allow for editing of the .py files via winscp while logged in as debian.
+reference instructions for setting up a "new board"
+
+/usr/local/lib/python3.9/dist-packages
+
+
+https://learn.adafruit.com/adding-a-single-board-computer-to-platformdetect-for-blinka/environment-setup
+
+this is how i did it (its not clean, sorry its been over 30 years since i've been in a programming class)
+
+the adafruit attempt piggybacks on DRA74X chip id (BBAI?)  to attempt to keep this open for use i created pinai64.py instead of editing the pin.py files.
+
+Under  /usr/local/lib/python3.9/dist-packages
+
+edit digitalio.py and add the following elif statement. (I put it under the DRA74X elif entry)
+
+elif detector.chip.TDA4VM:
+    from adafruit_blinka.microcontroller.dra74x.pinai64 import *
+
+edit board.py and add the following elif statement. (I put it under the BBAI elif entry)
+
+elif board_id == ap_board.BEAGLEBONE_AI64:
+    from adafruit_blinka.board.beagleboard.beaglebone_ai64 import *
+    print("bbai64 select") #comment to troublshoot
+
+under /usr/local/lib/python3.9/dist-packages/adafruit_platformdetect
+
+edit board.py and add the following elif statement. (I put it under the BBAI elif entry)
+
+there is a a try: statement near the bottom for the ai-64, this is trying to read 2-00500/nvmem this isn't right. 
+#        try:
+        #            # Special Case for AI64
+        #            with open("/sys/bus/nvmem/devices/2-00500/nvmem", "rb") as eeprom:
+        #                eeprom_bytes = eeprom.read(16)
+        #        except FileNotFoundError:
+        #            return None
+
+instead use the get_device_model() method to obtain the board. 
+# beagle,j721e-beagleboneai64^@ti,j721e^@
+
+I added following abothe the memory read try: statements.
+
+board_value = self.detector.get_device_model()
+        if "BeagleBone AI-64" in board_value:
+            return boards.BEAGLEBONE_AI64
+            print ("board detected: ",board_value)
+
+under /usr/local/lib/python3.9/dist-packages/microcontroller
+
+edit pin.py and add the following elif statement. (I put it under the DRA74X elif entry)
+
+elif chip_id == ap_chip.TDA4VM:
+    from adafruit_blinka.microcontroller.dra74x.pinai64 import *
+
+edit __init__.py and add the following elif statement. (I put it under the DRA74X elif entry)
+
+elif chip_id == ap_chip.TDA4VM:
+    from adafruit_blinka.microcontroller.dra74x import *
+
+under /usr/local/lib/python3.9/dist-packages/adafruit_blinka/microcontroller/dra74x create(copy) pinai64.py
+
+https://github.com/adafruit/Adafruit_Blinka/issues/687
+
+
+pinai64.py probably needs work, but it is corrected for the Ai64 gpio address (ex. 1, 20 for P8.3) refer to 
+https://docs.beagleboard.io/latest/boards/beaglebone/ai-64/04-expansion.html#bbai64-expansion
+I couldn't find the address for the AI64 USRx LED's so they are not used.
+pin.py under dra74x is for something else and all adresses are wrong.
+I will link or past ai64.py separately.
+
+
+# I2C2
+I2C2_SCL = P9_19  # was i2c4_scl
+I2C2_SDA = P9_20  # was i2c4_sda
+
+
+
+
+under /usr/local/lib/python3.9/dist-packages/adafruit_blinka/board/beagleboard 
+
+edit beaglebone_ai64.py
+
+change the from statement to:
+from adafruit_blinka.microcontroller.dra74x import pinai64
+instead of changing pin.xx_x 90 times i just added the following under the from statement: (i was tired)
+pin=pinai64
+
+I tested this for digital outputs  seems to work. i2c was created successfully but not tested yet need to check uart/spi/i2c yet.
+
+i2c
+check i2c
+
+ls -lah /dev/bone/i2c/
+should see 
+lrwxrwxrwx 1 root root  11 Jun 18  2023 2 -> ../../i2c-5
+scan devices
+i2cdetect -r 5
+ the 5 is significant.
+
+make sure under  /usr/local/lib/python3.9/dist-packages/adafruit_blinka/microcontroller/dra74x
+pinai64.py
+order port for i2c2-5 has to match 5, I2C2  (not 3, i2c4)
+i2cPorts = (
+    (5, I2C2_SCL, I2C2_SDA),  # default config
+    (5, I2C2_SCL, I2C2_SDA),  # roboticscape config
+    (3, I2C5_SCL, I2C5_SDA),  # roboticscape config
+)
+
+###################SHOW-pins##################################
+
+
+
+https://github.com/kevinacahalan/bbai64_sketch_dt_setup_5_10?tab=readme-ov-file
+sudo git clone https://github.com/kevinacahalan/bbai64_sketch_dt_setup_5_10.git 
+
+./show-pins.pl
+
+
+PRU's
+https://forum.beagleboard.org/t/ai64-pru-basics-very/32288
+
+https://github.com/gitklindsayjr/Beaglebone_AI64_PRUS/blob/main/pru0_motor_control.tar.xz
+
+
+
+
+
+prudebug...
+
+
+state
+echo 'stop' > /sys/class/remoteproc/remoteproc0/state
+
+cp /home/debian//prumemtest.out /lib/firmware/prumemtest.out
+cp /home/debian//Steppercontrolpru2.out /lib/firmware/Steppercontrolpru2.out
+echo 'Steppercontrolpru2.out' > /sys/class/remoteproc/remoteproc0/firmware
+echo 'prumemtest.out' > /sys/class/remoteproc/remoteproc0/firmware
+
+echo start > /dev/remoteproc/j7-pru0_0/state
+echo 'start' > /sys/class/remoteproc/remoteproc0/state
+*************************************************************************overlay
+
+need toi creat an overlay stepper.dts
+cd /boot/firmware/extlinux/
+add it to extlinux overlay
+
+label BeagleBone AI-64 eMMC (default)
+    kernel /Image
+    append root=/dev/mmcblk0p2 ro rootfstype=ext4 rootwait net.ifnames=0 quiet
+    fdtdir /
+    #fdtoverlays /overlays/<file>.dtbo
+    #fdtoverlays /overlays/J721E-PRU-UIO-00A0.dtbo
+     fdtoverlays /overlays/steppercontrol.dtbo
+    initrd /initrd.img
+
+
+
+dmesg | grep pru
+ls -l /lib/firmware
+head /sys/class/remoteproc/remoteproc*/name
+cat /boot/firmware/extlinux/extlinux.conf | grep fdtoverlays
+to tell what kernel is running
+uname -srm
+
+find -name "uEnv.txt"
+
+
+search for memory location of pru
+
+
+dmesg | grep remoteproc0
+
+0b022000-0b0220ff : b034000.pru control
+0b022400-0b0224ff : b034000.pru debug
+0b034000-0b036fff : b034000.pru iram
+
+remoteproc remoteproc0: b034000.pru is available
+
+sudo k3conf dump processor
+https://github.com/loic-fejoz/beaglebone-ai64-tutorial/tree/main/example-00-pru
+
+
+echo 'stop' > /sys/class/remoteproc/remoteproc0/state
+cp /home/debian//squarewave.out /lib/firmware/squarewave.out
+echo 'squarewave.out' > /sys/class/remoteproc/remoteproc0/firmware
+echo 'start' > /sys/class/remoteproc/remoteproc0/state
+
+echo 'stop' > /sys/class/remoteproc/remoteproc0/state
+cp /home/debian//Steppercontrolpru2.out /lib/firmware/Steppercontrolpru2.out
+echo 'Steppercontrolpru2.out' > /sys/class/remoteproc/remoteproc0/firmware
+echo 'start' > /sys/class/remoteproc/remoteproc0/state
+
+
+
+
+Steppercontrolpru2.out
+
+
+
+echo 'stop' > /dev/remoteproc/j7-pru0_0/state
+cp /home/debian//squarewave.out /lib/firmware/squarewave.out
+echo 'squarewave.out' > /dev/remoteproc/j7-pru0_0/firmware
+echo 'start' > /dev/remoteproc/j7-pru0_0/state
+
+
+/dev/remoteproc/j7-pru0_0/state
+
+journalctl -b -1
+
+journalctl --list-boots
+ls -l /var/log/{boot.log,dmesg,kern.log}
+sudo beagle-version | grep UBOOT
+
+indigo_server -v -v
+indigo_server -b -v -C -i
+
+
+
+

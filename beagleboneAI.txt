@@ -1,18 +1,9 @@
-
-
 flashing image:
 http://elinux.org/Beagleboard:BeagleBoneBlack_Debian#Flashing_eMMC.
-
-
 this time.....
-
-
-sudo apt update ; sudo apt upgrade
-sudo beagle-flasher
 
 usb connection:
 http://192.168.7.2/
-
 
 wifi:  board does not have wifi built in. use usb wifi dongle
 
@@ -25,21 +16,19 @@ sudo ip link set wlan0 up
 ip link show wlan0
 /sbin/iw wlan0 link
 iwconfig 
-
-wpa_passphrase 444 >> /etc/wpa_supplicant.conf
+wpa_passphrase xxxxxxx >> /etc/wpa_supplicant.conf
 cat /etc/wpa_supplicant.conf 
 sudo wpa_supplicant -B -Dnl80211 -i wlan0 -c/etc/wpa_supplicant.conf
 /sbin/iw wlan0 link
 
 enable wifi at boot
 /sbin/iw wlan0 link
-root
 
-
+root:
+sudo -i
 edit interfaces
 sudo nano  /etc/network/interfaces
-
-add
+add:
 auto wlan0
 iface wlan0 inet dhcp
 wireless-essid 444
@@ -48,50 +37,18 @@ pre-up wpa_supplicant -B -Dnl80211 -i wlan0 -c/etc/wpa_supplicant.conf
 post-down killall -q wpa_supplicant
 
 
-apt update
-apt upgrade
-sudo apt install --only-upgrade bb-customizations
-sudo apt install --only-upgrade bb-u-boot-beagleboneai64 bb-customizations
-sudo systemctl enable bb-symlinks.service
-sudo /opt/u-boot/bb-u-boot-beagleboneai64/install-microsd.sh
-sudo /opt/u-boot/bb-u-boot-beagleboneai64/install-emmc.sh
-cd /opt/source/dtb-5.10-ti
-git pull
-make all_arm64
-make install all_arm64
-cd /boot/firmware/extlinux
-nano extlinux.conf and added → ftdoverlays /overlays/xxx.dtbo
-reboot
-
 sudo beagle-version
 sudo beagle-version | grep
 
-
-
-
-
-pip3 updates
+pip3 updates:
 
 pip3 install --upgrade pip
 pip3 install --upgrade setuptools
 
-
-
-switch to root
-
-sudo -i
-
 Configuring pins
 https://forum.beagleboard.org/t/bb-ai64-gpio-basics/36032/8
-
-To document the steps for non-software experts who like myself might have a hard time figuring out where the files that need edited are hiding and how to apply the changes (and if applicable to gather feedback on how to do it better), here is what I ended up doing to get it working on a clean install, based on the great feedback from all who responded to this thread:
-
-    Flash recent image: bbai64-emmc-flasher-debian-11.8-xfce-arm64-2024-01-11-10gb.img.xz found at https://rcn-ee.com/rootfs/debian-arm64-11-bullseye-xfce-v5.10-ti/2024-01-11 1/
-
-    Set up network (I use a wifi card so I set up my wifi ssid/password in /etc/wpa_supplicant/wpa_supplicant-wlan0.conf) so you can transfer files to the BBAI64.
-
     
-    In directory /opt/source/dtb-5.10-ti/ 
+In directory /opt/source/dtb-5.10-ti/ 
    
 /opt/source/dtb-5.10-ti/src/arm64/overlays
 run:
@@ -99,7 +56,6 @@ run:
     sudo make clean
     sudo make
     sudo make install_arm64
-
     reboot
 
 
@@ -114,12 +70,6 @@ for uart and i2c add thes lines to your custom overlay dts file.
 	status = "okay";
 };
 
-
-
-I guess the existing /opt/source/dtb-5.10-ti/src/arm64/k3-j721e-beagleboneai64-bone-buses.dtsi could be edited to add the missing section but it’s a large file so it was easier to simply replace it.
-
-Thanks again to all who helped!
-
 Adafruit gpio doesnt work with AI64 yet.
 
 gpiod library.
@@ -133,22 +83,6 @@ gpioinfo
 gpiofind P8_28
 gpioset 1 72=0
 
-
-
-edit k3-j721e-beagleboneai64-bone-buses.dtsi (44.6 KB) to get uart working on p9.24 and p9.26 uart 1 ttyS4
-edit k3-j721e-beagleboneai64-bone-buses.dtsi (44.6 KB) to get I2C2 working on p9.19 and p9.20 i2c2 i2c-5
-change disabled to okay
-In directory /opt/source/dtb-5.10-ti/ run:
-
-    sudo make clean
-    sudo make
-    sudo make install_arm64
-
-    reboot
-
-
-
-
 uart and i2c
 to check if ports are open
 tree /dev/bone
@@ -159,8 +93,6 @@ https://aperiodic.net/screen/quick_reference
 or minitab -D /dev/ttyS4 (turn off hw / sw bit control)
 
  BLINKA
-
-
 pip3 install Adafruit-Blinka
 pip3 install adafruit-circuitpython-lsm303agr-mag
 pip3 install adafruit-circuitpython-lsm303-accel
@@ -174,14 +106,11 @@ it tries to read the nvmem to get the id, but that doesnt quite work and the pin
 
 need to fix it manually.
 
-
-
 I suggest setting the chmod -R 777 to the dist-packages directory and sub directories
 this will allow for editing of the .py files via winscp while logged in as debian.
 reference instructions for setting up a "new board"
 
 /usr/local/lib/python3.9/dist-packages
-
 
 https://learn.adafruit.com/adding-a-single-board-computer-to-platformdetect-for-blinka/environment-setup
 
@@ -303,8 +232,6 @@ https://github.com/gitklindsayjr/Beaglebone_AI64_PRUS/blob/main/pru0_motor_contr
 
 
 
-
-prudebug...
 
 
 state

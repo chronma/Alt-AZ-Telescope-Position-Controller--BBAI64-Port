@@ -362,7 +362,7 @@ def panright(message):
         print (moveangle, " ", movespeed)
         if ((bitmagic(command_bits,9,"getbit")==0) and (bitmagic(command_bits,10,"getbit")==0) and (bitmagic(command_bits,11,"getbit")==0) ): #make sure the pru is not already running a motor
             command_bits = telescope_motion.AZ_rotate(command_bits,-moveangle,anglemanaulmovespeed,0)
-            Az_angle-=moveangle #track angle
+            Az_angle+=moveangle #track angle
             ctypes.c_uint32.from_buffer(mem, 0x000).value=command_bits #send command word to the PRU shared memory
     elif mode=="a": #if auto mode then move bump AZ position 
             AZoffset-=moveangle
@@ -390,7 +390,7 @@ def panleft(message):
         print (moveangle, " ", movespeed)
         if ((bitmagic(command_bits,9,"getbit")==0) and (bitmagic(command_bits,10,"getbit")==0) and (bitmagic(command_bits,11,"getbit")==0) ):
             command_bits = telescope_motion.AZ_rotate(command_bits,moveangle,anglemanaulmovespeed,0)
-            Az_angle+=moveangle #track angle
+            Az_angle-=moveangle #track angle
             ctypes.c_uint32.from_buffer(mem, 0x000).value=command_bits #send command word to the PRU shared memory
     elif mode=="a": #if auto mode then move bump AZ position 
             AZoffset+=moveangle
@@ -417,7 +417,7 @@ def altup(message):
         print (moveangle, " ", movespeed)
         if ((bitmagic(command_bits,9,"getbit")==0) and (bitmagic(command_bits,10,"getbit")==0) and (bitmagic(command_bits,11,"getbit")==0) ):
             command_bits = telescope_motion.ALT_move(command_bits,-moveangle,anglemanaulmovespeed,0)
-            Alt_angle-=moveangle  #track angle
+            Alt_angle+=moveangle  #track angle
             ctypes.c_uint32.from_buffer(mem, 0x000).value=command_bits
     elif mode=="a": #if auto mode then move bump ALT position
             ALToffset-=moveangle
@@ -431,7 +431,7 @@ def altup(message):
          broadcast=True)
 
 @socketio.on('altdown_event') # raise the telescope
-def altup(message):
+def altdown(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
     global anglemanaulmovespeed # access to global default stepper speed
     global mode # access to global program mode
@@ -444,7 +444,7 @@ def altup(message):
         print (moveangle, " ", movespeed)
         if ((bitmagic(command_bits,9,"getbit")==0) and (bitmagic(command_bits,10,"getbit")==0) and (bitmagic(command_bits,11,"getbit")==0) ):
             command_bits = telescope_motion.ALT_move(command_bits,moveangle,anglemanaulmovespeed,0)
-            Alt_angle+=moveangle
+            Alt_angle-=moveangle
             ctypes.c_uint32.from_buffer(mem, 0x000).value=command_bits
     elif mode=="a": #if auto mode then move bump ALT position
             ALToffset+=moveangle
@@ -964,7 +964,7 @@ def background_thread(): #main program
                     
                         ctypes.c_uint32.from_buffer(mem, 0x000).value=command_bits
                         
-                        time.sleep(.25)
+                        time.sleep(.01)
             if (mode=="T" or mode =="t"): #set target
                 
                 target_type=input("(p)lanet, (s)tar, or (C)oordinates: ")
@@ -1006,6 +1006,9 @@ t3.start()
 # need to start indigo server
 #sudo indigo_server -v
 # (default port: 7624)
+
+
+
 
 
 
